@@ -9,4 +9,9 @@ data class Task(
     var userId: Long = 0,
     var title: String = "",
     var description: String = "",
-)
+) {
+    fun clearServerSpecificData() {
+        id = null
+        userId = 0
+    }
+}

@@ -3,6 +3,8 @@ package com.kurlic.tasksspring.auth
 import com.kurlic.tasksspring.data.User
 import com.kurlic.tasksspring.data.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 
@@ -14,18 +16,22 @@ class AuthController {
 
 
     @PostMapping("/register")
-    fun register(@RequestBody registerData: RegisterData): String {
+    fun register(@RequestBody registerData: RegisterData): ResponseEntity<String> {
         val res = authService.register(registerData)
-        return res.toString()
+        return if (res == null) {
+            ResponseEntity.status(HttpStatus.CONFLICT).body(res.toString())
+        } else {
+            ResponseEntity.status(HttpStatus.OK).body(res.toString())
+        }
     }
 
     @PostMapping("/login")
-    fun login(@RequestBody authRequest: AuthRequest): String {
+    fun login(@RequestBody authRequest: AuthRequest): ResponseEntity<String> {
         val res = authService.authenticate(authRequest)
         return if (res != null) {
-            "True"
+            ResponseEntity.status(HttpStatus.OK).body("Successfully logged in")
         } else {
-            "False"
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed")
         }
     }
 }
