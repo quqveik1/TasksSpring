@@ -28,10 +28,20 @@ class AuthController {
     @PostMapping("/login")
     fun login(@RequestBody authRequest: AuthRequest): ResponseEntity<String> {
         val res = authService.authenticate(authRequest)
-        return if (res != null) {
-            ResponseEntity.status(HttpStatus.OK).body("Successfully logged in")
-        } else {
+        return if (res == null) {
             ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed")
+        } else {
+            ResponseEntity.status(HttpStatus.OK).body("Successfully logged in")
+        }
+    }
+
+    @PostMapping("/delete")
+    fun delete(@RequestBody authRequest: AuthRequest): ResponseEntity<String> {
+        val res = authService.deleteUser(authRequest)
+        return if (!res) {
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Delete failed")
+        } else {
+            ResponseEntity.status(HttpStatus.OK).body("Successfully deleted account")
         }
     }
 }

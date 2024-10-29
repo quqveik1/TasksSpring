@@ -39,4 +39,14 @@ class AuthService {
             null
         }
     }
+
+    fun deleteUser(authRequest: AuthRequest): Boolean {
+        val user = authenticate(authRequest) ?: return false
+        try {
+            userRepository.delete(user)
+        } catch (ex: Exception) {
+            return false
+        }
+        return true
+    }
 }
